@@ -1,0 +1,20 @@
+{
+  "name": "app-monitoring-prometheus",
+  "version": "1.0.0",
+  "description": "Node.js application with Prometheus metrics",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "prometheus",
+    "monitoring",
+    "metrics"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^15.1.0"
+  }
+}
