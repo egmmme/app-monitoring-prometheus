@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --production
+# Install only production dependencies (Node 18 ships with npm 10 which supports --omit=dev)
+RUN npm install --omit=dev
 
 COPY . .
 

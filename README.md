@@ -30,20 +30,37 @@ app-monitoring-prometheus/
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- Docker + Docker Compose, or
+- Podman (Podman Desktop on Windows recommended)
 
 ## Quick Start
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/egmmme/app-monitoring-prometheus.git
 cd app-monitoring-prometheus
 ```
 
-2. Start all services:
+2. Start all services (choose one runtime):
+
+Docker Compose
+
 ```bash
 docker-compose up -d
+```
+
+Podman (Windows/Podman Desktop)
+
+```powershell
+# First-time setup (once):
+podman machine init
+podman machine start
+
+# Start the stack in detached mode:
+podman compose up -d
+# If the compose subcommand is unavailable, use:
+# podman-compose up -d
 ```
 
 3. Access the services:
@@ -89,13 +106,34 @@ The pre-configured dashboard includes:
 
 ## Stopping the Services
 
+Docker Compose
+
 ```bash
 docker-compose down
 ```
 
+Podman
+
+```powershell
+podman compose down
+# If using podman-compose:
+# podman-compose down
+```
+
 To remove volumes as well:
+
+Docker Compose
+
 ```bash
 docker-compose down -v
+```
+
+Podman
+
+```powershell
+podman compose down -v
+# Or
+# podman-compose down -v
 ```
 
 ## Development
@@ -104,9 +142,28 @@ To modify the application:
 
 1. Edit files in the `app/` directory
 2. Rebuild and restart:
+
+Docker Compose
+
 ```bash
 docker-compose up -d --build app
 ```
+
+Podman
+
+```powershell
+podman compose up -d --build app
+# Or
+# podman-compose up -d --build app
+```
+
+## Notes for Podman Users
+
+- The existing `docker-compose.yml` works with Podman via `podman compose` or `podman-compose`.
+- Named volumes (e.g., `prometheus-data`, `grafana-data`) are created separately from Docker volumes; data from prior Docker runs is not automatically shared.
+- Service DNS names (e.g., `app`, `prometheus`, `grafana`) resolve the same in Podman compose networks. Prometheus scrapes `app:3000` as configured.
+- If `podman compose` is not available, install or enable the Compose plugin, or use `podman-compose`.
+- On Windows, ensure the Podman machine is running: `podman machine start`.
 
 ## License
 
