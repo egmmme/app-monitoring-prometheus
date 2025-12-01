@@ -37,3 +37,23 @@ groups:
         annotations:
           summary: "Application is down"
           description: "The node-app instance has been down for more than 1 minute"
+
+      # Promedio de latencia > 1s durante 1m
+      - alert: AltaLatencia
+        expr: (sum(rate(http_request_duration_seconds_sum[1m])) by (job) / sum(rate(http_request_duration_seconds_count[1m])) by (job)) > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latencia alta detectada"
+          description: "Promedio de latencia > 1s (valor={{ $value }}s) en los últimos 1m"
+
+      # Errores HTTP 5xx altos (distinta a HighErrorRate para práctica)
+      - alert: Errores500Altos
+        expr: sum(rate(http_requests_total{status_code=~"5.."}[5m])) by (job) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Tasa alta de errores 5xx"
+          description: "Se detecta > 1 error 5xx por segundo en promedio ({{ $value }}) durante 2m"

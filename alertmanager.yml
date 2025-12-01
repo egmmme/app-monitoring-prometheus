@@ -1,0 +1,37 @@
+global: {}
+
+route:
+  receiver: equipo-devops
+  group_by: ["alertname"]
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 3h
+
+receivers:
+  # Receptor principal del equipo DevOps (email + Slack)
+  - name: equipo-devops
+    email_configs:
+      - to: "devops@empresa.com"
+        from: "alertas@empresa.com"
+        smarthost: "smtp.empresa.com:587"
+        auth_username: "alertas"
+        auth_password: "reemplaza_con_password"
+        require_tls: true
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/XXX/YYY/ZZZ"
+        channel: "#alertas-devops"
+        icon_emoji: ":rotating_light:"
+        send_resolved: true
+        title: "{{ .CommonLabels.alertname }} ({{ .Status }})"
+        text: "{{ range .Alerts }}• {{ .Annotations.summary }} | {{ .Labels.severity }} | {{ .StartsAt }}\n{{ end }}"
+
+  # Webhook genérico (p.ej., Azure Logic App para crear incidentes en Azure DevOps)
+  - name: azure-devops
+    webhook_configs:
+      - url: "https://<logic-app-url>/workflows/<id>/triggers/manual/paths/invoke?api-version=2016-10-01&sp=..."
+        send_resolved: true
+
+  # Receptor nulo para pruebas
+  - name: devnull
+    webhook_configs:
+      - url: "http://127.0.0.1:1/" # placeholder para visualizar en UI
