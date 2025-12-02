@@ -57,3 +57,14 @@ groups:
         annotations:
           summary: "Tasa alta de errores 5xx"
           description: "Se detecta > 1 error 5xx por segundo en promedio ({{ $value }}) durante 2m"
+
+      # Regla temporal para pruebas: umbral bajo de latencia media
+      - alert: AltaLatenciaTest
+        expr: "(sum(rate(http_request_duration_seconds_sum[1m])) by (job) / sum(rate(http_request_duration_seconds_count[1m])) by (job)) > 0.003"
+        for: 30s
+        labels:
+          severity: warning
+          test: "true"
+        annotations:
+          summary: "[TEST] Latencia media > 3ms"
+          description: "Regla temporal: latencia promedio > 3ms durante 30s (valor={{ $value }}s). Eliminar tras validación."

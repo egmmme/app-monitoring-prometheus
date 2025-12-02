@@ -11,8 +11,8 @@ receivers:
   # Receptor principal del equipo DevOps (email + Slack)
   - name: equipo-devops
     email_configs:
-      - to: "devops@empresa.com"
-        from: "alertas@empresa.com"
+      - to: "e.garcia.madruga@avanade.com"
+        from: "egmadruga@empresa.com"
         smarthost: "smtp.empresa.com:587"
         auth_username: "alertas"
         auth_password: "reemplaza_con_password"
